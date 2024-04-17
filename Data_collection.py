@@ -37,6 +37,15 @@ x=0
 res = pd.read_csv("US_yieldcurve.csv")
 del res[res.columns[0]]
 res = res.loc[res["Date"]>"2007-01-03"]
+
+returns_df = pd.DataFrame({'Date': res['Date']})  # Initialize DataFrame with 'Date' column
+
+for col in res.columns[1:]:  # Exclude 'Date' column
+    returns_df[col] = (res[col].shift(-1) - res[col]) / res[col]
+
+# Drop the last row as it will contain NaN values
+returns_df = returns_df[:-1]
+res = returns_df.sort_values(by='Date')
 scaler = StandardScaler(with_std=True, with_mean=True)
 res_scaled = scaler.fit_transform(res.loc[:, res.columns != "Date"])
 pca_yc=PCA()
@@ -86,3 +95,6 @@ plt.grid(True)
 plt.show()
 
 output_pca.to_csv('pca_components.csv', index=False)
+
+weigths = pca_yc.explained_variance_[[0,1,2]]
+plotdat[0][[4,6,8]] * weigths[0] *-1 + plotdat[1][[4,6,8]]*weigths[1] + plotdat[2][[4,6,8]] * weigths[2]
