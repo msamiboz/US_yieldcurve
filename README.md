@@ -4,124 +4,96 @@
 
 This project analyzes the US Treasury yield curve using Principal Component Analysis (PCA) to extract three key factors that drive bond market movements: **Level**, **Slope**, and **Butterfly (Curvature)**. The ultimate goal is to construct a superior bond portfolio using short, medium, and long-term bond ETFs that outperforms traditional total bond market ETFs.
 
-## Theoretical Background
+## Investment Thesis
 
-### PCA in Fixed Income
-The yield curve can be decomposed into three primary factors:
-- **Level (PC1)**: Parallel shifts in the entire yield curve (~80-90% of variance)
-- **Slope (PC2)**: Steepening/flattening between short and long rates (~5-15% of variance)  
-- **Butterfly/Curvature (PC3)**: Changes in curve curvature (~2-5% of variance)
+The strategy is based on the following principles:
+1. The yield curve can be decomposed into three principal components that explain most of the variance
+2. These components have distinct economic interpretations and can be traded independently
+3. By dynamically allocating between short, medium, and long-term Treasury ETFs based on these factors, we can potentially achieve better risk-adjusted returns than a static allocation
 
-### Investment Thesis
-By understanding these factors and their dynamics, we can:
-1. Build targeted exposures using duration-specific ETFs
-2. Dynamically rebalance based on factor loadings
-3. Potentially achieve better risk-adjusted returns than broad bond indices
+## Methodology
 
-## Project Roadmap
+### Data Collection
+- US Treasury yield curve data from FRED
+- ETF price data for:
+  - SHY (Short-term Treasury)
+  - IEI (Medium-term Treasury)
+  - TLH (Long-term Treasury)
+  - GOVT (Benchmark - Total Treasury Market)
 
-### Phase 1: Data Collection and Preparation
-1. **Yield Curve Data**
-   - Collect historical US Treasury yield data for various maturities
-   - Clean and preprocess the data
-   - Handle missing values and outliers
-   - Create time series dataset
-
-2. **ETF Data**
-   - Collect historical price data for:
-     - Short-term Treasury ETF: SHY
-     - Medium-term Treasury ETF: IEI
-     - Long-term Treasury ETFs: TLH
-     - Total Bond Market ETF: AGG
-   - Calculate daily returns
-   - Align dates with yield curve data
-
-### Phase 2: PCA Analysis
-1. **Yield Curve Decomposition**
-   - Perform PCA on yield curve data
-   - Extract first three principal components
-   - Calculate explained variance ratio
-   - Visualize components and their loadings
-
-2. **Factor Analysis**
-   - Interpret PC1 as Level factor
-   - Interpret PC2 as Slope factor
-   - Interpret PC3 as Butterfly/Curvature factor
-   - Create factor time series
-
-### Phase 3: Portfolio Construction
-1. **Factor Exposure Analysis**
+### Factor Analysis
+1. **PCA Decomposition**
+   - Extract three principal components from yield curve data
+   - Interpret components as Level, Slope, and Butterfly factors
    - Calculate factor loadings for each ETF
-   - Analyze historical factor exposures
-   - Identify optimal duration buckets
 
-2. **Portfolio Strategy**
-   - Design portfolio allocation rules based on factor signals
-   - Implement dynamic rebalancing logic
-   - Calculate transaction costs and slippage
+2. **Signal Generation**
+   - Calculate z-scores for each factor using 20-day lookback
+   - Generate trading signals based on z-score thresholds
+   - Combine signals with factor loadings to determine portfolio weights
 
-### Phase 4: Backtesting and Performance Analysis
-1. **Strategy Implementation**
-   - Backtest portfolio strategy
-   - Compare against benchmark (Total Bond Market ETF)
-   - Calculate key performance metrics:
-     - Total return
-     - Sharpe ratio
-     - Maximum drawdown
-     - Information ratio
+3. **Portfolio Construction**
+   - Implement dynamic rebalancing with 0.1% threshold
+   - Normalize weights to ensure portfolio is fully invested
+   - Calculate daily returns and performance metrics
 
-2. **Risk Analysis**
-   - Analyze factor risk contributions
-   - Calculate portfolio volatility
-   - Stress test under different market conditions
+## Results
 
-### Phase 5: Documentation and Reporting
-1. **Results Documentation**
-   - Document methodology and assumptions
-   - Create performance attribution analysis
-   - Generate visualizations and charts
+### Performance Metrics (2015-2024)
+| Metric | Portfolio | Benchmark (GOVT) |
+|--------|-----------|------------------|
+| Annual Return | 4.19% | -0.82% |
+| Annual Volatility | 5.16% | 5.29% |
+| Sharpe Ratio | 0.81 | -0.15 |
+| Tracking Error | 1.66% | - |
+| Information Ratio | 3.02 | - |
 
-2. **Code Documentation**
-   - Document code structure and functions
-   - Create usage examples
-   - Add inline comments
+### Key Findings
+1. **Outperformance**: The strategy outperformed the benchmark by 3.55% annually
+2. **Risk Management**: Lower volatility than benchmark (5.01% vs 5.29%)
+3. **Risk-Adjusted Returns**: Positive Sharpe ratio (0.55) vs negative benchmark (-0.15)
+4. **Active Management**: Information ratio of 1.11 indicates consistent outperformance
 
-## Project Structure
-```
-US_yieldcurve/
-├── data/                    # Data storage
-│   ├── raw/                # Raw data files
-│   └── processed/          # Processed data files
-├── notebooks/              # Jupyter notebooks for analysis
-├── src/                    # Source code
-│   ├── data/              # Data collection and processing
-│   ├── analysis/          # PCA and factor analysis
-│   ├── portfolio/         # Portfolio construction
-│   └── utils/             # Utility functions
-├── tests/                  # Unit tests
-├── results/               # Analysis results and visualizations
-└── docs/                  # Documentation
-```
+### Factor Contributions
+- Level factor explains ~80% of yield curve variance
+- Slope factor explains ~15% of variance
+- Butterfly factor explains ~5% of variance
 
-## Getting Started
-1. Clone the repository
-2. Install required dependencies
-3. Run data collection scripts
-4. Execute analysis notebooks
-5. Review results and documentation
+## Future Work
 
-## Dependencies
-- Python 3.8+
-- pandas
-- numpy
-- scikit-learn
-- matplotlib
-- seaborn
-- yfinance (for ETF data)
-- fredapi (for Treasury data)
+### Interactive Dashboard Development
+1. **Portfolio Analysis Dashboard**
+   - Real-time performance visualization
+   - Interactive factor analysis plots
+   - Dynamic weight allocation viewer
+   - Performance attribution analysis
+   - Custom date range selection
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+2. **Strategy Customization Interface**
+   - User-defined ETF selection
+   - Customizable lookback periods
+   - Adjustable rebalancing thresholds
+   - Factor signal threshold customization
 
-# US_yieldcurve
- 
+### Data Collection Enhancement
+1. **Automated ETF Data Collector**
+   - Direct integration with financial data providers
+   - Real-time data updates(daily)
+   - Support for custom ETF selection
+   - Data quality validation
+
+2. **Flexible ETF Selection**
+   - Allow users to select their own:
+     - Short-term Treasury ETFs
+     - Medium-term Treasury ETFs
+     - Long-term Treasury ETFs
+     - Benchmark ETFs
+
+3. **Deatils of ETFs**
+   - ETF metadata and characteristics display
+   - ETF comparison tools
+
+### Bias Analysis and Mitigation
+1. **Lookahead Bias Prevention**
+   - Factor loading is the best candidate
+

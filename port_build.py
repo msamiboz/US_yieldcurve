@@ -38,6 +38,7 @@ weights = implement_rebalancing(weights, rebalance_threshold)
 
 portfolio_returns = calculate_portfolio_returns(weights, etf_returns)
 
+########################################################
 
 # Calculate cumulative returns for portfolio and benchmark
 portfolio_cum_returns = (1 + portfolio_returns).cumprod() - 1
@@ -69,8 +70,40 @@ active_return = portfolio_mean - benchmark_mean
 information_ratio = active_return / tracking_error
 print(f"Information Ratio: {information_ratio:.2f}")
 
+# Add to port_build.py after calculating all metrics
+import json
+
+# Save portfolio results
+portfolio_results = {
+    'performance_metrics': {
+        'portfolio_annual_return': float(portfolio_mean),
+        'benchmark_annual_return': float(benchmark_mean),
+        'portfolio_annual_volatility': float(portfolio_vol),
+        'benchmark_annual_volatility': float(benchmark_vol),
+        'portfolio_sharpe_ratio': float(portfolio_sharpe),
+        'benchmark_sharpe_ratio': float(benchmark_sharpe),
+        'tracking_error': float(tracking_error),
+        'information_ratio': float(information_ratio)
+    },
+    'parameters': {
+        'lookback_period': lookback_period,
+        'rebalance_threshold': rebalance_threshold
+    }
+}
+
+# Save results to JSON
+import os
+
+# Create results directory if it doesn't exist
+os.makedirs('results', exist_ok=True)
+
+with open('results/portfolio_results.json', 'w') as f:
+    json.dump(portfolio_results, f, indent=4)
+
+# Save cumulative returns
+portfolio_cum_returns.to_csv('results/portfolio_cumulative_returns.csv', index=True)
+benchmark_cum_returns.to_csv('results/benchmark_cumulative_returns.csv', index=True)
 
 
-portfolio_returns.to_csv('portfolio_data/portfolio_returns.csv', index=True)
 
 

@@ -1,0 +1,16 @@
+{
+    "performance_metrics": {
+        "portfolio_annual_return": 0.04189997587805722,
+        "benchmark_annual_return": -0.008192079186194938,
+        "portfolio_annual_volatility": 0.051622427874574585,
+        "benchmark_annual_volatility": 0.052884484358747125,
+        "portfolio_sharpe_ratio": 0.8116622484293124,
+        "benchmark_sharpe_ratio": -0.15490515385615106,
+        "tracking_error": 0.016596749493403003,
+        "information_ratio": 3.0181846803293086
+    },
+    "parameters": {
+        "lookback_period": 20,
+        "rebalance_threshold": 0.001
+    }
+}
