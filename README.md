@@ -59,6 +59,8 @@ The strategy is based on the following principles:
 - Slope factor explains ~15% of variance
 - Butterfly factor explains ~5% of variance
 
+**These results are not final and should be further analyzed to prevent any biases.**
+
 ## Future Work
 
 ### Interactive Dashboard Development
